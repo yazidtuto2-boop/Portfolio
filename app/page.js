@@ -4,7 +4,7 @@ export default function HomePage() {
       <section className="hero">
         <div>
           <p className="eyebrow">Product Owner & Développeur Technique</p>
-          <h1>Yazid Djouad</h1>
+          <h1>Yazid Djoudad</h1>
           <p className="tagline">
             Ingénieur logiciel expert en pilotage produit, modernisation d’applications et développement fullstack.
           </p>
