@@ -184,6 +184,7 @@ export default function HomePage() {
               <span className="stat-label">{t.technologies}</span>
             </div>
           </div>
+          <p className="hero-about-desc" id="expertise">{t.aboutDesc}</p>
         </div>
 
         <div className="hero-card glass-card">
@@ -237,15 +238,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* About */}
-      <section className="section" id="expertise">
-        <div className="section-head">
-          <span className="section-tag">{t.aboutTag}</span>
-          <h2>{t.aboutTitle}</h2>
-          <p className="section-copy">{t.aboutDesc}</p>
         </div>
       </section>
 
