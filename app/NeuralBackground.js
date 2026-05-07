@@ -30,6 +30,10 @@ export default function NeuralBackground({
     let t0 = 0;
 
     const mouse = { x: -9999, y: -9999, active: false };
+
+    // Magnet target: center of hovered card
+    const magnet = { x: -9999, y: -9999, active: false };
+
     const particles = [];
 
     const resize = () => {
@@ -57,6 +61,7 @@ export default function NeuralBackground({
       maxLife: 200 + Math.random() * 200,
       size: 0.8 + Math.random() * 1.4,
     });
+
     for (let i = 0; i < count; i++) particles.push(seed());
 
     const onMove = (e) => {
@@ -70,8 +75,30 @@ export default function NeuralBackground({
       mouse.x = -9999;
       mouse.y = -9999;
     };
+
+    const onCardEnter = (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      magnet.x = rect.left + rect.width / 2 - canvasRect.left;
+      magnet.y = rect.top + rect.height / 2 - canvasRect.top;
+      magnet.active = true;
+    };
+    const onCardLeave = () => {
+      magnet.active = false;
+      magnet.x = -9999;
+      magnet.y = -9999;
+    };
+
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
+
+    const bindCards = () => {
+      document.querySelectorAll(".glass-card").forEach((el) => {
+        el.addEventListener("mouseenter", onCardEnter);
+        el.addEventListener("mouseleave", onCardLeave);
+      });
+    };
+    setTimeout(bindCards, 500);
 
     const hex = accent.replace("#", "");
     const ar = parseInt(hex.slice(0, 2), 16);
@@ -89,10 +116,12 @@ export default function NeuralBackground({
       t0 += reduced ? 0.2 : 1;
 
       for (const p of particles) {
+        // Flow field
         const a = noise(p.x, p.y, t0) * Math.PI * 2;
-        p.vx += Math.cos(a) * 0.08;
-        p.vy += Math.sin(a) * 0.08;
+        p.vx += Math.cos(a) * 0.06;
+        p.vy += Math.sin(a) * 0.06;
 
+        // Cursor repel (always active)
         if (mouse.active) {
           const dx = p.x - mouse.x;
           const dy = p.y - mouse.y;
@@ -105,13 +134,26 @@ export default function NeuralBackground({
           }
         }
 
+        // Magnet attract toward card center
+        if (magnet.active) {
+          const dx = magnet.x - p.x;
+          const dy = magnet.y - p.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d > 1) {
+            // Stronger pull for distant particles, softer when very close
+            const force = Math.min(2.5, 300 / (d + 30));
+            p.vx += (dx / d) * force * 0.15;
+            p.vy += (dy / d) * force * 0.15;
+          }
+        }
+
         p.vx *= 0.92;
         p.vy *= 0.92;
         p.x += p.vx;
         p.y += p.vy;
         p.life++;
 
-        if (p.x < 0 || p.x > w || p.y < 0 || p.y > h || p.life > p.maxLife) {
+        if (!magnet.active && (p.x < 0 || p.x > w || p.y < 0 || p.y > h || p.life > p.maxLife)) {
           p.x = Math.random() * w;
           p.y = Math.random() * h;
           p.vx = 0;
@@ -121,9 +163,31 @@ export default function NeuralBackground({
         }
 
         const fade = Math.sin((p.life / p.maxLife) * Math.PI);
-        ctx.fillStyle = `rgba(${ar},${ag},${ab},${fade * 0.7})`;
+
+        // Glow near magnet
+        let alpha = fade * 0.7;
+        let size = p.size;
+        if (magnet.active) {
+          const dm = Math.sqrt((p.x - magnet.x) ** 2 + (p.y - magnet.y) ** 2);
+          if (dm < 120) {
+            const t = 1 - dm / 120;
+            alpha = fade * (0.7 + t * 0.9);
+            size = p.size * (1 + t * 2.5);
+
+            // Halo glow
+            const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 5);
+            grd.addColorStop(0, `rgba(${ar},${ag},${ab},${alpha * 0.5})`);
+            grd.addColorStop(1, `rgba(${ar},${ag},${ab},0)`);
+            ctx.fillStyle = grd;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, size * 5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        ctx.fillStyle = `rgba(${ar},${ag},${ab},${Math.min(1, alpha)})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -135,6 +199,10 @@ export default function NeuralBackground({
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
+      document.querySelectorAll(".glass-card").forEach((el) => {
+        el.removeEventListener("mouseenter", onCardEnter);
+        el.removeEventListener("mouseleave", onCardLeave);
+      });
       ro.disconnect();
     };
   }, [accent, count, repelRadius, repelStrength, fadeAlpha]);

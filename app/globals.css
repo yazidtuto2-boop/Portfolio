@@ -982,8 +982,15 @@ h3 {
 }
 
 .passion-card {
-  padding: 2rem 1.75rem;
+  padding: 2.2rem 1.75rem;
   text-align: center;
+  border-top: 2px solid rgba(129, 140, 248, 0.35);
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.passion-card:hover {
+  border-color: rgba(129, 140, 248, 0.8);
+  transform: translateY(-4px);
 }
 
 .passion-icon {
@@ -993,14 +1000,19 @@ h3 {
 }
 
 .passion-card h3 {
-  font-size: 1.08rem;
-  margin-bottom: 0.65rem;
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .passion-card p {
   color: var(--muted-light);
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-size: 0.92rem;
+  line-height: 1.75;
 }
 
 /* ─── Lang toggle ─────────────────────────────────────── */

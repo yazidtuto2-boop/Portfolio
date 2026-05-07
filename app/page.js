@@ -54,6 +54,8 @@ const T = {
     skillSoft: "Soft Skills",
     productSkills: ["Agilité", "Scrum", "Cadrage", "Rédaction CDC", "Vision SaaS", "Gestion IA"],
     softSkills: ["Autonomie", "Esprit d'analyse", "Communication", "Rigueur industrielle"],
+    skillLangs: "Langues",
+    langSkills: ["Français — Bilingue", "Anglais — B2", "Espagnol — B1", "Arabe — Courant", "Berbère — Langue maternelle"],
     eduTag: "Formation",
     eduTitle: "Parcours académique",
     epitechTitle: "Master Expert en Technologie de l'information",
@@ -66,8 +68,8 @@ const T = {
     aiPassionDesc: "Passionné par les technologies IA et leurs applications réelles. Avec Suportify, je développe des solutions d'IA pour transformer le service client.",
     footballTitle: "Football",
     footballDesc: "Joueur et passionné de football, je pratique ce sport régulièrement. Le football m'a enseigné l'importance du travail en équipe et de la stratégie.",
-    mangaTitle: "Mangas",
-    mangaDesc: "Lecteur de mangas passionné, j'apprécie la narration visuelle unique du medium. Les mangas m'inspirent créativement dans mes approches de design produit.",
+    mangaTitle: "Lecture",
+    mangaDesc: "Lecteur passionné, j'apprécie aussi bien les mangas que la littérature au sens large. La lecture nourrit ma créativité et ma capacité d'analyse au quotidien.",
     footerRights: "© 2025 Yazid Djoudad. Tous droits réservés.",
     prev: "Précédent",
     next: "Suivant",
@@ -120,6 +122,8 @@ const T = {
     skillSoft: "Soft Skills",
     productSkills: ["Agility", "Scrum", "Scoping", "Spec writing", "SaaS vision", "AI management"],
     softSkills: ["Autonomy", "Analytical thinking", "Communication", "Industrial rigor"],
+    skillLangs: "Languages",
+    langSkills: ["French — Bilingual", "English — B2", "Spanish — B1", "Arabic — Fluent", "Berber — Native language"],
     eduTag: "Education",
     eduTitle: "Academic background",
     epitechTitle: "Master's Expert in Information Technology",
@@ -132,8 +136,8 @@ const T = {
     aiPassionDesc: "Passionate about AI technologies and their real-world applications. With Suportify, I develop AI solutions to transform customer service.",
     footballTitle: "Football",
     footballDesc: "A football player and enthusiast, I practice the sport regularly. Football has taught me the importance of teamwork and strategy.",
-    mangaTitle: "Manga",
-    mangaDesc: "An avid manga reader, I appreciate the unique visual storytelling of the medium. Manga creatively inspires my product design approaches.",
+    mangaTitle: "Reading",
+    mangaDesc: "An avid reader, I enjoy manga as well as literature in a broader sense. Reading fuels my creativity and analytical thinking on a daily basis.",
     footerRights: "© 2025 Yazid Djoudad. All rights reserved.",
     prev: "Previous",
     next: "Next",
@@ -436,6 +440,12 @@ export default function HomePage() {
             <h4 className="skill-cat-title">{t.skillSoft}</h4>
             <div className="tag-row">
               {t.softSkills.map((s) => <span key={s} className="tag">{s}</span>)}
+            </div>
+          </div>
+          <div className="skill-cat glass-card">
+            <h4 className="skill-cat-title">{t.skillLangs}</h4>
+            <div className="tag-row">
+              {t.langSkills.map((s) => <span key={s} className="tag">{s}</span>)}
             </div>
           </div>
         </div>
